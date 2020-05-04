@@ -33,3 +33,18 @@ require 'mn2pdf'
 Mn2pdf.convert(sample_xml_path, output_pdf_path, sample_xsl_path)
 ----
 
+== Updating the gem
+
+Update `lib/mn2pdf/version.rb` to the desired version of https://github.com/metanorma/mn2pdf[mn2pdf].
+
+Run `rake` to download the `bin/mn2pdf.jar` file:
+
+[source,ruby]
+----
+rm -f bin/mn2pdf.jar
+rake bin/mn2pdf.jar
+----
+
+Then release the gem with `rake release`.
+
+
