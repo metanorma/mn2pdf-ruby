@@ -1,14 +1,15 @@
 require 'tmpdir'
 
 RSpec.describe Mn2pdf do
-  it "has a version number" do
-    expect(Mn2pdf::VERSION).not_to be nil
+
+  it 'matches the version number of JAR' do
+    expect(Mn2pdf::VERSION).to eq(Mn2pdf.version)
   end
 
-  it "converts XML to PDF" do
+  it 'converts XML to PDF' do
 
     Dir.mktmpdir do |dir|
-      pdf_path = File.join(dir, "G.191.pdf")
+      pdf_path = File.join(dir, 'G.191.pdf')
 
       Mn2pdf.convert(sample_xml, pdf_path, sample_xsl)
       expect(File.exist?(pdf_path)).to be true
@@ -18,12 +19,12 @@ RSpec.describe Mn2pdf do
 
   let(:sample_xsl) do
     Pathname.new(File.dirname(__dir__)).
-    join("spec", "fixtures", "itu.recommendation.xsl").to_s
+    join('spec', 'fixtures', 'itu.recommendation.xsl').to_s
   end
 
   let(:sample_xml) do
     Pathname.new(File.dirname(__dir__)).
-    join("spec", "fixtures", "G.191.xml").to_s
+    join('spec', 'fixtures', 'G.191.xml').to_s
   end
 
 end
