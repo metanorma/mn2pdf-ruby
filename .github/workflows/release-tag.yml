@@ -25,6 +25,7 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
           architecture: 'x64'
       - name: Update version
+        run: |
           gem install gem-release
           gem bump ${MN2PDF_VERSION}
       - name: Update mn2pdf.jar
