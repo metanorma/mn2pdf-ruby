@@ -22,7 +22,7 @@ jobs:
       - name: Use Ruby
         uses: actions/setup-ruby@v1
         with:
-          ruby-version: ${{ matrix.ruby }}
+          ruby-version: '2.6'
           architecture: 'x64'
       - name: Update version
         run: |
