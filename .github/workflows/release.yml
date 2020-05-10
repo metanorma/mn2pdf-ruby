@@ -2,7 +2,6 @@ name: release
 
 on:
   push:
-    branches: [ master ]
     tags:
       - '*'
 
@@ -31,6 +30,6 @@ jobs:
         env:
           RUBYGEMS_API_KEY: ${{secrets.RUBYGEMS_API_KEY}}
         run: |
-          echo "${RUBYGEMS_API_KEY}" > ~/.gem/credentials
-          chmod 0600 ~/.gem/credentials
-          rake release
+          gem install gem-release
+          git status
+          gem release -k "${RUBYGEMS_API_KEY}"
