@@ -1,3 +1,3 @@
 module Mn2pdf
-  VERSION = '1.14'
+  VERSION = '1.13'
 end
