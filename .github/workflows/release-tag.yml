@@ -27,7 +27,7 @@ jobs:
       - name: Update version
         run: |
           gem install gem-release
-          gem bump ${MN2PDF_VERSION}
+          gem bump ${MN2PDF_VERSION} --no-commit
       - name: Update mn2pdf.jar
         run: |
           rm -f bin/mn2pdf.jar
@@ -41,5 +41,7 @@ jobs:
           bundle exec rake
       - name: Push commit and tag
         run: |
+          git add bin/mn2pdf.jar lib/mn2pdf/version.rb
+          git commit -m "Bump version to ${METANORMA_CLI_VERSION}"
           git tag v${MN2PDF_VERSION}
           git push github HEAD:${GITHUB_REF} --tags

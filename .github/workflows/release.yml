@@ -26,10 +26,7 @@ jobs:
       - name: Run specs
         run: |
           bundle exec rake
-      - name: Publish to rubygems.org
-        env:
-          RUBYGEMS_API_KEY: ${{secrets.RUBYGEMS_API_KEY}}
-        run: |
-          gem install gem-release
-          echo "${RUBYGEMS_API_KEY}" > ~/.gem/credentials
-          gem release
+      - name: Publish gem
+        uses: dawidd6/action-publish-gem@v1
+        with:
+          api_key: ${{secrets.RUBYGEMS_API_KEY}}
