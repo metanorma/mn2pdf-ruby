@@ -9,10 +9,12 @@ jobs:
     runs-on: ubuntu-18.04
     if: startsWith(github.event.client_payload.ref, 'refs/tags/v')
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Add writable remote
         run: |
-          git remote add github "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git"
+          git config --global user.name "${GITHUB_ACTOR}"
+          git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          git remote add github https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
           git pull github ${GITHUB_REF} --ff-only
       - name: Parse mn2pdf version
         env:
@@ -41,7 +43,7 @@ jobs:
           bundle exec rake
       - name: Push commit and tag
         run: |
-          git add bin/mn2pdf.jar lib/mn2pdf/version.rb
+          git add -u bin/mn2pdf.jar lib/mn2pdf/version.rb
           git commit -m "Bump version to ${METANORMA_CLI_VERSION}"
           git tag v${MN2PDF_VERSION}
           git push github HEAD:${GITHUB_REF} --tags
