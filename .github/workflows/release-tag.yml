@@ -44,6 +44,6 @@ jobs:
       - name: Push commit and tag
         run: |
           git add -u bin/mn2pdf.jar lib/mn2pdf/version.rb
-          git commit -m "Bump version to ${METANORMA_CLI_VERSION}"
+          git commit -m "Bump version to ${MN2PDF_VERSION}"
           git tag v${MN2PDF_VERSION}
           git push github HEAD:${GITHUB_REF} --tags
