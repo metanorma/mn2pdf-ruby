@@ -2,7 +2,7 @@ name: release
 
 on:
   push:
-    branch: master
+    branches: [ master ]
     tags:
       - '*'
 
@@ -32,4 +32,5 @@ jobs:
           RUBYGEMS_API_KEY: ${{secrets.RUBYGEMS_API_KEY}}
         run: |
           echo "${RUBYGEMS_API_KEY}" > ~/.gem/credentials
+          chmod 0600 ~/.gem/credentials
           rake release
