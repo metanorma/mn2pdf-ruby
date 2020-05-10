@@ -30,6 +30,10 @@ jobs:
         env:
           RUBYGEMS_API_KEY: ${{secrets.RUBYGEMS_API_KEY}}
         run: |
+          cat ~/.gem/credentials <<EOL
+          ---
+          :rubygems_api_key: ${RUBYGEMS_API_KEY}
+          EOL
           gem install gem-release
           git status
-          gem release -k "${RUBYGEMS_API_KEY}"
+          gem release
