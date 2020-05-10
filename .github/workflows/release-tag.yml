@@ -24,18 +24,18 @@ jobs:
         with:
           ruby-version: '2.6'
           architecture: 'x64'
-      - name: Update version
+      - name: Update gems
         run: |
           gem install gem-release
+          gem install bundler
+          bundle install --jobs 4 --retry 3
+      - name: Update version
+        run: |
           gem bump ${MN2PDF_VERSION} --no-commit
       - name: Update mn2pdf.jar
         run: |
           rm -f bin/mn2pdf.jar
           rake bin/mn2pdf.jar
-      - name: Update gems
-        run: |
-          gem install bundler
-          bundle install --jobs 4 --retry 3
       - name: Run specs
         run: |
           bundle exec rake
