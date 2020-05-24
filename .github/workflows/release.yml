@@ -28,7 +28,7 @@ jobs:
           bundle exec rake
       - name: Publish to rubygems.org
         env:
-          RUBYGEMS_API_KEY: ${{secrets.RUBYGEMS_API_KEY}}
+          RUBYGEMS_API_KEY: ${{secrets.METANORMA_CI_RUBYGEMS_API_KEY}}
         run: |
           gem install gem-release
           touch ~/.gem/credentials
