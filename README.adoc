@@ -1,6 +1,6 @@
 = mn2pdf Ruby gem
 
-image:https://img.shields.io/gem/v/metanorma.svg["Gem Version", link="https://rubygems.org/gems/metanorma"]
+image:https://img.shields.io/gem/v/mn2pdf.svg["Gem Version", link="https://rubygems.org/gems/mn2pdf"]
 image:https://github.com/metanorma/mn2pdf-ruby/workflows/ubuntu/badge.svg["Ubuntu Build Status", link="https://github.com/metanorma/mn2pdf-ruby/actions?query=workflow%3Aubuntu"]
 image:https://github.com/metanorma/mn2pdf-ruby/workflows/macos/badge.svg["OSX Build Status", link="https://github.com/metanorma/mn2pdf-ruby/actions?query=workflow%3Amacos"]
 image:https://github.com/metanorma/mn2pdf-ruby/workflows/windows/badge.svg["Windows Build Status", link="https://github.com/metanorma/mn2pdf-ruby/actions?query=workflow%3Awindows"]
