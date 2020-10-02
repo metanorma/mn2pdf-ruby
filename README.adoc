@@ -30,8 +30,10 @@ Or include it in your gemspec.
 [source,ruby]
 ----
 require 'mn2pdf'
-Mn2pdf.convert(sample_xml_path, output_pdf_path, sample_xsl_path)
+Mn2pdf.convert(sample_xml_path, output_pdf_path, sample_xsl_path, options = "")
 ----
+
+The options are any options trailing in the mn2pdf Java executable, e.g. `--split-by-language`.
 
 == Updating the gem
 
