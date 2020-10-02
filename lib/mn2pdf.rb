@@ -16,13 +16,13 @@ module Mn2pdf
     message.strip
   end
 
-  def self.convert(url_path, output_path, xsl_stylesheet)
+  def self.convert(url_path, output_path, xsl_stylesheet, options = "")
     return if url_path.nil? || output_path.nil? || xsl_stylesheet.nil?
 
     puts MN2PDF_JAR_PATH
     cmd = ['java', '-Xss5m', '-Xmx1024m', '-jar', MN2PDF_JAR_PATH, '--xml-file',
            url_path, '--xsl-file', xsl_stylesheet, '--pdf-file',
-           output_path].join(' ')
+           output_path, options].join(' ')
 
     puts cmd
     _, error_str, status = Open3.capture3(cmd)

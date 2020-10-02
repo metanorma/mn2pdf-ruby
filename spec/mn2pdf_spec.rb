@@ -2,9 +2,12 @@ require 'tmpdir'
 
 RSpec.describe Mn2pdf do
 
+=begin
+  There is no reason why the gem version must equal the JAR version. Rescinded 
   it 'matches the version number of JAR' do
     expect(Mn2pdf::VERSION).to eq(Mn2pdf.version)
   end
+=end
 
   it 'converts XML to PDF' do
 
