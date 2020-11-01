@@ -25,11 +25,12 @@ module Mn2pdf
            output_path, options].join(' ')
 
     puts cmd
-    _, error_str, status = Open3.capture3(cmd)
+    stdout_str, error_str, status = Open3.capture3(cmd)
 
     unless status.success?
-      raise error_str
+      # Strip default mn2pdf message
+      stdout_str = stdout_str.gsub('Preparing...', '').strip
+      raise [stdout_str, error_str].join(' ').strip
     end
   end
-
 end
