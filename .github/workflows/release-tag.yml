@@ -21,6 +21,7 @@ jobs:
           MN2PDF_TAG: ${{ github.event.client_payload.ref }}
         run: |
           echo "::set-env name=MN2PDF_VERSION::${MN2PDF_TAG#*/v}"
+          echo MN2PDF_VERSION=${MN2PDF_TAG#*/v} >> ${GITHUB_ENV}
       - name: Use Ruby
         uses: actions/setup-ruby@v1
         with:
