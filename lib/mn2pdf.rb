@@ -1,4 +1,5 @@
 require 'open3'
+require 'rbconfig'
 require 'mn2pdf/version'
 
 module Mn2pdf
@@ -16,11 +17,21 @@ module Mn2pdf
     message.strip
   end
 
+  def self.jvm_options
+    options = ['-Xss5m', '-Xmx1024m']
+
+    if RbConfig::CONFIG['host_os'].match?(/darwin|mac os/)
+      options << '-Dapple.awt.UIElement=true'
+    end
+
+    options
+  end
+
   def self.convert(url_path, output_path, xsl_stylesheet, options = "")
     return if url_path.nil? || output_path.nil? || xsl_stylesheet.nil?
 
     puts MN2PDF_JAR_PATH
-    cmd = ['java', '-Xss5m', '-Xmx1024m', '-jar', MN2PDF_JAR_PATH, '--xml-file',
+    cmd = ['java', *jvm_options, '-jar', MN2PDF_JAR_PATH, '--xml-file',
            url_path, '--xsl-file', xsl_stylesheet, '--pdf-file',
            output_path, options].join(' ')
 
