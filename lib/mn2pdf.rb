@@ -43,6 +43,6 @@ module Mn2pdf
   def self.prepare_error_msg(stdout_str, error_str)
     # Strip default mn2pdf message
     stdout_str = stdout_str.gsub("Preparing...", "").strip
-    [stdout_str, error_str].join(" ").strip
+    ["[mn2pdf] Fatal:", stdout_str, error_str].join(" ").strip
   end
 end
