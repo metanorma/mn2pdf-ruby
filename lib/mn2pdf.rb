@@ -17,7 +17,7 @@ module Mn2pdf
 
   def self.help
     cmd = ["java", *jvm_options, "-jar", MN2PDF_JAR_PATH].join(" ")
-    # help message goes to STDERR
+    # help message goes to STDERR (from mn2pdf v1.36)
     blank_message, help_message, = Open3.capture3(cmd)
     help_message
   end

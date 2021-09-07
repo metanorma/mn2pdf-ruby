@@ -1,3 +1,3 @@
 module Mn2pdf
-  VERSION = "1.35".freeze
+  VERSION = "1.36".freeze
 end
