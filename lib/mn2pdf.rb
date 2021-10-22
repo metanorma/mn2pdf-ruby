@@ -4,9 +4,10 @@ require "mn2pdf/version"
 
 module Mn2pdf
   MN2PDF_JAR_PATH = File.join(File.dirname(__FILE__), "../bin/mn2pdf.jar")
+  DEFAULT_JAVA_OPTS = ["-Xss5m", "-Xmx2048m"]
 
   def self.jvm_options
-    options = []
+    options = DEFAULT_JAVA_OPTS.dup
 
     if RbConfig::CONFIG["host_os"].match?(/darwin|mac os/)
       options << "-Dapple.awt.UIElement=true"
@@ -31,9 +32,11 @@ module Mn2pdf
   def self.convert(url_path, output_path, xsl_stylesheet, options = "")
     return if url_path.nil? || output_path.nil? || xsl_stylesheet.nil?
 
-    cmd = ["java", "-Xss5m", "-Xmx2048m", *jvm_options,
-           "-jar", MN2PDF_JAR_PATH, "--xml-file", url_path,
-           "--xsl-file", xsl_stylesheet, "--pdf-file", output_path, options].join(" ")
+    cmd = ["java", *jvm_options,
+           "-jar", MN2PDF_JAR_PATH,
+           "--xml-file", url_path,
+           "--xsl-file", xsl_stylesheet,
+           "--pdf-file", output_path, options].join(" ")
 
     puts cmd
     stdout_str, error_str, status = Open3.capture3(cmd)
