@@ -34,31 +34,13 @@ module Mn2pdf
   end
 
   def self.convert(url_path, output_path, xsl_stylesheet, options = {})
-    cmd = build_cmd(url_path, output_path, xsl_stylesheet)
+    filterd_options = string_option(options) || hash_option(options)
 
-    return unless cmd
-
-    case options
-    when String
-      cmd << options
-
-      mn2pdf(cmd)
-    when Hash
-      manifest = options.delete(FONTS_MANIFEST)
-
-      options.each do |k, v|
-        cmd << "#{k} #{quote(v)}"
-      end
-      if manifest
-        dump_fontist_manifest_locations(manifest) do |manifest_path|
-          cmd << "--font-manifest" << quote(manifest_path)
-          mn2pdf(cmd)
-        end
-      else
-        mn2pdf(cmd)
-      end
+    if filterd_options
+      cmd = build_cmd(url_path, output_path, xsl_stylesheet)
+      mn2pdf(cmd << filterd_options)
     else
-      warn "Unsupported options type #{options.class}"
+      warn("Unsupported options type #{options.class}")
     end
   end
 
@@ -93,11 +75,31 @@ module Mn2pdf
   end
 
   def self.dump_fontist_manifest_locations(manifest)
-    Tempfile.create(["fontist_locations", ".yml"]) do |f|
-      f.write manifest.to_yaml
-      f.flush
+    file = Tempfile.new(["fontist_locations", ".yml"])
+    file.write(manifest.to_yaml)
 
-      yield f.path
+    ObjectSpace.undefine_finalizer(file)
+  end
+
+  def self.string_option(options)
+    if options.is_a?(String)
+      options
     end
   end
+
+  def self.hash_option(options)
+    if options.is_a?(Hash)
+      manifest = options.delete(FONTS_MANIFEST)
+      options_array = options.map { |key, value| "#{key} #{quote(value)}" }
+
+      if manifest
+        dump_fontist_manifest_locations(manifest) do |manifest_path|
+          options_array << "--font-manifest" << quote(manifest_path)
+        end
+      end
+
+      options_array
+    end
+  end
+
 end
