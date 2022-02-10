@@ -61,6 +61,16 @@ RSpec.describe Mn2pdf do
                      "--font-manifest": "fontist_locations.yml" })
   end
 
+  it "no empty string generated for nil" do
+    status = double
+    allow(status).to receive(:success?).and_return(true)
+    expect(Open3).to receive(:capture3) do |arg|
+      expect(arg).to end_with "--split-by-language "
+    end.and_return(["", "", status])
+    Mn2pdf.convert("fake.xml", "fake.pdf", "fake.xsl",
+                   { "--split-by-language": nil })
+  end
+
   let(:sample_xsl) do
     Pathname.new(File.dirname(__dir__))
       .join("spec", "fixtures", "itu.recommendation.xsl").to_s
