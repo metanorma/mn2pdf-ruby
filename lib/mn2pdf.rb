@@ -88,6 +88,7 @@ module Mn2pdf
   end
 
   def self.quote(str)
+    return "" if str.nil? || str.empty?
     return str if /^'.*'$/.match(str) || /^".*"$/.match(str)
 
     %("#{str}")
