@@ -47,7 +47,8 @@ module Mn2pdf
       manifest = options.delete(FONTS_MANIFEST)
 
       options.each do |k, v|
-        cmd << "#{k} #{quote(v)}"
+        sep = k.to_s.end_with?("=") ? "" : " "
+        cmd << "#{k}#{sep}#{quote(v)}"
       end
       if manifest
         dump_fontist_manifest_locations(manifest) do |manifest_path|
