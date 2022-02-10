@@ -48,6 +48,19 @@ RSpec.describe Mn2pdf do
     end
   end
 
+  it "no uncecessary spaces for parameters which ends with equals" do
+    status = double
+    allow(status).to receive(:success?).and_return(true)
+    expect(Open3).to receive(:capture3) do |arg|
+      expect(arg).to include '--param baseassetpath="sources"'
+      expect(arg).to include '--font-manifest "fontist_locations.yml"'
+    end.and_return(["", "", status])
+    Mn2pdf.convert("document.presentation.xml", "document.pdf",
+                   "ogc.engineering-report.xsl",
+                   { "--param baseassetpath=": "sources",
+                     "--font-manifest": "fontist_locations.yml" })
+  end
+
   let(:sample_xsl) do
     Pathname.new(File.dirname(__dir__))
       .join("spec", "fixtures", "itu.recommendation.xsl").to_s
