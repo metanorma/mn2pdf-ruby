@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.bindir        = "bin"
   spec.require_paths = ["lib"]
   spec.files         = `git ls-files`.split("\n")
-  spec.test_files    = `git ls-files -- {spec}/*`.split("\n")
+  spec.test_files    = `git ls-files -- {spec}/*`.split("\n") << "bin/mn2pdf.jar"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.5.0")
 
   # Specify which files should be added to the gem when it is released.

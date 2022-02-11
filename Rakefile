@@ -4,7 +4,7 @@ require_relative 'lib/mn2pdf/version'
 
 RSpec::Core::RakeTask.new(:spec)
 
-task :default => :spec
+task :default => ['bin/mn2pdf.jar', :spec]
 
 require 'open-uri'
 
