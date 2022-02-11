@@ -9,7 +9,7 @@ task :default => :spec
 require 'open-uri'
 
 file 'bin/mn2pdf.jar' do |file|
-  ver = Mn2pdf::VERSION
+  ver = Mn2pdf::MN2PDF_JAR_VERSION
   url = "https://github.com/metanorma/mn2pdf/releases/download/v#{ver}/mn2pdf-#{ver}.jar"
   File.open(file.name, 'wb') do |file|
     file.write open(url).read

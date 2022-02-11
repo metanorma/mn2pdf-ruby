@@ -3,8 +3,6 @@ require "rbconfig"
 require "tempfile"
 require "yaml"
 
-require "mn2pdf/version"
-
 module Mn2pdf
   MN2PDF_JAR_PATH = File.join(File.dirname(__FILE__), "../bin/mn2pdf.jar")
   DEFAULT_JAVA_OPTS = ["-Xss5m", "-Xmx2048m"].freeze
