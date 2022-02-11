@@ -48,3 +48,12 @@ jobs:
           chmod 0600 ~/.gem/credentials
           gem release
 
+      - if: failure()
+        uses: JasonEtco/create-an-issue@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
+        with:
+          assignees: CAMOBAP
+          update_existing: true
+          search_existing: all
+

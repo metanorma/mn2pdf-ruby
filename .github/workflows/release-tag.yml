@@ -9,41 +9,42 @@ jobs:
     runs-on: ubuntu-18.04
     if: startsWith(github.event.client_payload.ref, 'refs/tags/v')
     steps:
-      - uses: actions/checkout@v1
-      - name: Add writable remote
-        run: |
-          git config --global user.name "metanorma-ci"
-          git config --global user.email "metanorma-ci@users.noreply.github.com"
-          git remote add github "https://metanorma-ci:${{ secrets.METANORMA_CI_PAT_TOKEN }}@github.com/$GITHUB_REPOSITORY.git"
-          git pull github ${GITHUB_REF} --ff-only
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
+
       - name: Parse mn2pdf version
         env:
           MN2PDF_TAG: ${{ github.event.client_payload.ref }}
-        run: |
-          echo MN2PDF_VERSION=${MN2PDF_TAG#*/v} >> ${GITHUB_ENV}
-      - name: Use Ruby
-        uses: actions/setup-ruby@v1
+        run: echo MN2PDF_VERSION=${MN2PDF_TAG#*/v} >> ${GITHUB_ENV}
+
+      - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '2.6'
-          architecture: 'x64'
-      - name: Update gems
-        run: |
-          gem install gem-release
-          gem install bundler
-          bundle install --jobs 4 --retry 3
-      - name: Update version
-        run: |
-          gem bump --version ${MN2PDF_VERSION} --no-commit
-      - name: Update mn2pdf.jar
-        run: |
-          rm -f bin/mn2pdf.jar
-          rake bin/mn2pdf.jar
-      - name: Run specs
-        run: |
-          bundle exec rake
+          bundler-cache: true
+
+      - run: gem install gem-release
+
+      - run: gem bump --version ${MN2PDF_VERSION} --no-commit
+
+      - run: rm -f bin/mn2pdf.jar && bundle exec rake bin/mn2pdf.jar
+
+      - run: bundle exec rake
+
       - name: Push commit and tag
         run: |
+          git config --global user.name "metanorma-ci"
+          git config --global user.email "metanorma-ci@users.noreply.github.com"
           git add -u bin/mn2pdf.jar lib/mn2pdf/version.rb
           git commit -m "Bump version to ${MN2PDF_VERSION}"
           git tag v${MN2PDF_VERSION}
-          git push github HEAD:${GITHUB_REF} --tags
+          git push origin HEAD:${GITHUB_REF} --tags
+
+      - if: failure()
+        uses: JasonEtco/create-an-issue@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
+        with:
+          assignees: CAMOBAP
+          update_existing: true
+          search_existing: all
