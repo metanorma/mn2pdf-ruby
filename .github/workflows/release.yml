@@ -23,7 +23,7 @@ jobs:
           ruby-version: '2.6'
           bundler-cache: true
 
-      - run: rm -f bin/mn2pdf.jar && bundle exec rake bin/mn2pdf.jar
+      - run: bundle exec rake bin/mn2pdf.jar
 
       - run: bundle exec rake
 

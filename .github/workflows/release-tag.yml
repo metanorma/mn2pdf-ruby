@@ -27,7 +27,7 @@ jobs:
 
       - run: gem bump --version ${MN2PDF_VERSION} --no-commit
 
-      - run: rm -f bin/mn2pdf.jar && bundle exec rake bin/mn2pdf.jar
+      - run: bundle exec rake bin/mn2pdf.jar
 
       - run: bundle exec rake
 
@@ -35,7 +35,7 @@ jobs:
         run: |
           git config --global user.name "metanorma-ci"
           git config --global user.email "metanorma-ci@users.noreply.github.com"
-          git add -u bin/mn2pdf.jar lib/mn2pdf/version.rb
+          git add -u lib/mn2pdf/version.rb
           git commit -m "Bump version to ${MN2PDF_VERSION}"
           git tag v${MN2PDF_VERSION}
           git push origin HEAD:${GITHUB_REF} --tags
