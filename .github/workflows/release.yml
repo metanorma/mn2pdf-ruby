@@ -39,8 +39,8 @@ jobs:
 
       - if: github.event_name == 'workflow_dispatch' && inputs.next_version != 'skip'
         run: |
-          gem bump --version ${{ github.event.next_version }} --no-commit
-          git add -u bin/mn2pdf.jar lib/mnconvert/version.rb
+          gem bump --version ${{ inputs.next_version }} --no-commit
+          git add -u lib/mn2pdf/version.rb
           git commit -m "Bump version to ${mnconvert_VERSION}"
           git tag v${{ inputs.next_version }}
           git push origin HEAD:${GITHUB_REF} --tags
