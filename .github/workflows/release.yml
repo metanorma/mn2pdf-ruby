@@ -21,6 +21,8 @@ jobs:
     needs: prepare
     steps:
       - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
 
       - run: |
           git config user.name "metanorma-ci"
