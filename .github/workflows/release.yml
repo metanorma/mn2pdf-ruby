@@ -13,52 +13,43 @@ on:
         default: 'skip'
 
 jobs:
+  prepare:
+    uses: metanorma/ci/.github/workflows/prepare-rake.yml@main
+
   release:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
+    needs: prepare
     steps:
       - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
-
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.1'
-          bundler-cache: true
-
-      - if: github.event_name == 'workflow_dispatch' && inputs.next_version != 'skip'
-        run: |
-          rm -f bin/mn2pdf.jar
-
-      - run: bundle exec rake bin/mn2pdf.jar
-
-      - run: bundle exec rake
-
-      - run: gem install gem-release
 
       - run: |
           git config user.name "metanorma-ci"
           git config user.email "metanorma-ci@users.noreply.github.com"
 
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ needs.prepare.outputs.default-ruby-version }}
+          bundler-cache: true
+
+      - if: github.event_name == 'workflow_dispatch' && inputs.next_version != 'skip'
+        run: rm -f bin/mn2pdf.jar
+
+      - run: bundle exec rake
+
+      - run: gem install gem-release
+
       - if: github.event_name == 'workflow_dispatch' && inputs.next_version != 'skip'
         run: |
           gem bump --version ${{ inputs.next_version }} --no-commit
           git add -u lib/mn2pdf/version.rb
-          git commit -m "Bump version to ${mnconvert_VERSION}"
+          git commit -m "Bump version to ${{ inputs.next_version }}"
           git tag v${{ inputs.next_version }}
           git push origin HEAD:${GITHUB_REF} --tags
 
-      - name: Publish to rubygems.org
-        env:
-          RUBYGEMS_API_KEY: ${{secrets.METANORMA_CI_RUBYGEMS_API_KEY}}
-        run: |
-          gem install gem-release
-          mkdir -p ~/.gem
-          cat > ~/.gem/credentials << EOF
-          ---
-          :rubygems_api_key: ${RUBYGEMS_API_KEY}
-          EOF
-          chmod 0600 ~/.gem/credentials
-          gem release
+      - uses: actions-mn/gem-release@main
+        with:
+          api-key: ${{ secrets.METANORMA_CI_RUBYGEMS_API_KEY }}
+          release-command: gem release
 
       - if: failure()
         uses: JasonEtco/create-an-issue@v2
@@ -68,4 +59,3 @@ jobs:
           assignees: CAMOBAP
           update_existing: true
           search_existing: all
-
