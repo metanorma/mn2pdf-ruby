@@ -5,7 +5,7 @@ require "yaml"
 
 module Mn2pdf
   MN2PDF_JAR_PATH = File.join(File.dirname(__FILE__), "../bin/mn2pdf.jar")
-  DEFAULT_JAVA_OPTS = %W[-Xss5m -Xmx2048m -Djava.awt.headless=true].freeze
+  DEFAULT_JAVA_OPTS = %w[-Xss5m -Xmx2048m -Djava.awt.headless=true].freeze
   FONTS_MANIFEST = :font_manifest
 
   def self.jvm_options
@@ -38,24 +38,9 @@ module Mn2pdf
 
     case options
     when String
-      cmd << options
-
-      mn2pdf(cmd)
+      mn2pdf(cmd + [options])
     when Hash
-      manifest = options.delete(FONTS_MANIFEST)
-
-      options.each do |k, v|
-        sep = k.to_s.end_with?("=") ? "" : " "
-        cmd << "#{k}#{sep}#{quote(v)}"
-      end
-      if manifest
-        dump_fontist_manifest_locations(manifest) do |manifest_path|
-          cmd << "--font-manifest" << quote(manifest_path)
-          mn2pdf(cmd)
-        end
-      else
-        mn2pdf(cmd)
-      end
+      mn2pdf_hash(cmd, options)
     else
       warn "Unsupported options type #{options.class}"
     end
@@ -69,6 +54,19 @@ module Mn2pdf
      "--xml-file", quote(url),
      "--xsl-file", quote(xslt),
      "--pdf-file", quote(output)]
+  end
+
+  def self.mn2pdf_hash(cmd, options)
+    manifest = options.delete(FONTS_MANIFEST)
+    options_to_cmd(options, cmd)
+    if manifest
+      dump_fontist_manifest_locations(manifest) do |manifest_path|
+        cmd << "--font-manifest" << quote(manifest_path)
+        mn2pdf(cmd)
+      end
+    else
+      mn2pdf(cmd)
+    end
   end
 
   def self.mn2pdf(cmd)
@@ -98,6 +96,13 @@ module Mn2pdf
       f.flush
 
       yield f.path
+    end
+  end
+
+  def self.options_to_cmd(options, cmd)
+    options.each do |k, v|
+      sep = k.to_s.end_with?("=") ? "" : " "
+      cmd << "#{k}#{sep}#{quote(v)}"
     end
   end
 end
