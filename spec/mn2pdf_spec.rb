@@ -71,6 +71,20 @@ RSpec.describe Mn2pdf do
                    { "--split-by-language": nil })
   end
 
+  it "handle mn2pdf.jar error output" do
+    pdf_path = "out.pdf"
+    stdout = "stdout1\nstdout2\nstdout3"
+    stderr = "stderr1\nstderr2\nError: stderr3"
+    status = double
+
+    allow(status).to receive(:success?).and_return(false)
+    expect(Open3).to receive(:capture3).and_return([stdout, stderr, status])
+
+    expect do
+      Mn2pdf.convert(sample_xml, pdf_path, sample_xsl)
+    end.to raise_error("mn2pdf failed! stderr3")
+  end
+
   let(:sample_xsl) do
     Pathname.new(File.dirname(__dir__))
       .join("spec", "fixtures", "itu.recommendation.xsl").to_s
@@ -82,7 +96,7 @@ RSpec.describe Mn2pdf do
   end
 
   let(:font_manifest) do
-    fonts = File.join(ENV["HOME"], ".fontist", "fonts")
+    fonts = File.join(Dir.home, ".fontist", "fonts")
     {
       "Cambria Math" => {
         "Regular" => {

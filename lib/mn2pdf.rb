@@ -72,15 +72,27 @@ module Mn2pdf
   def self.mn2pdf(cmd)
     cmd = cmd.join(" ")
     puts cmd
-    out, err, status = Open3.capture3(cmd)
+    stdout, stderr, status = Open3.capture3(cmd)
 
-    raise prepare_error_msg(out, err) unless status.success?
+    unless status.success?
+      puts_error_log(stdout, stderr)
+
+      raise StandardError.new("mn2pdf failed! #{parse_error_msg(stderr)}")
+    end
   end
 
-  def self.prepare_error_msg(stdout, stderr)
-    # Strip default mn2pdf message
-    stdout = stdout.gsub("Preparing...", "").strip
-    ["[mn2pdf] Fatal:", stdout, stderr].join(" ").strip
+  def self.puts_error_log(stdout, stderr)
+    puts ["Fatal error!", "STDOUT:", stdout.strip, "STDERR:", stderr.strip]
+      .join("\n")
+      .split("\n")
+      .map { |line| "[mn2pdf] #{line}" }
+      .join("\n")
+  end
+
+  def self.parse_error_msg(stderr)
+    err = stderr.split("\n").detect { |line| line.start_with? "Error: " }
+
+    err ? err[7..-1] : stderr.strip
   end
 
   def self.quote(str)
