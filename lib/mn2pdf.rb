@@ -2,6 +2,7 @@ require "open3"
 require "rbconfig"
 require "tempfile"
 require "yaml"
+require "fileutils"
 
 module Mn2pdf
   MN2PDF_JAR_PATH = File.join(File.dirname(__FILE__), "../bin/mn2pdf.jar")
@@ -62,6 +63,9 @@ module Mn2pdf
     if manifest
       dump_fontist_manifest_locations(manifest) do |manifest_path|
         cmd << "--font-manifest" << quote(manifest_path)
+        manifest_copy = manifest_path + ".copy.yml"
+        FileUtils.cp(manifest_path, manifest_copy)
+        puts manifest_copy
         mn2pdf(cmd)
       end
     else
