@@ -15,6 +15,8 @@ module Mn2pdf
       options << "-Dapple.awt.UIElement=true"
     end
 
+    options << "-Duser.home=#{Dir.home}"
+
     options
   end
 
