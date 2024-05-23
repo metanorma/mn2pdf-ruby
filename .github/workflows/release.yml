@@ -61,3 +61,4 @@ jobs:
           assignees: CAMOBAP
           update_existing: true
           search_existing: all
+          filename: .github/RELEASE_ISSUE_TEMPLATE.md
