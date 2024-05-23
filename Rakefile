@@ -22,5 +22,6 @@ file "bin/mn2pdf.jar" do |file|
     end
   end
   url = jar_url(Mn2pdf::MN2PDF_JAR_VERSION)
+  print "Downloading #{url}..."
   File.binwrite(file.name, URI.parse(url).read)
 end
