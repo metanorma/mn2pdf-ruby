@@ -6,17 +6,16 @@ require "yaml"
 require "mn2pdf/jvm"
 
 module Mn2pdf
-  MN2PDF_JAR_PATH = File.join(File.dirname(__FILE__), "../bin/mn2pdf.jar")
   FONTS_MANIFEST = :font_manifest
 
   def self.help
     # help message goes to STDERR (from mn2pdf v1.36)
-    _, help_message, = Jvm.jar(MN2PDF_JAR_PATH)
+    _, help_message, = Jvm.run
     help_message
   end
 
   def self.version
-    message, = Jvm.jar(MN2PDF_JAR_PATH, %w[-v])
+    message, = Jvm.run(%w[-v])
     message.strip
   end
 
@@ -57,7 +56,7 @@ module Mn2pdf
   end
 
   def self.mn2pdf(args)
-    stdout, stderr, status = Jvm.jar(MN2PDF_JAR_PATH, args)
+    stdout, stderr, status = Jvm.run(args)
 
     unless status.success?
       puts_error_log(stdout, stderr)

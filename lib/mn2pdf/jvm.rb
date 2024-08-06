@@ -1,7 +1,12 @@
 require "open3"
+require "pathname"
 require "rbconfig"
 
 module Jvm
+  MN2PDF_JAR_PATH = Pathname.new(__FILE__)
+    .dirname
+    .join("../../bin/mn2pdf.jar")
+    .realpath
   DEFAULT_JAVA_OPTS = %w[-Xss10m -Xmx3g -Djava.awt.headless=true].freeze
 
   def self.to_bytes(value)
@@ -46,8 +51,8 @@ module Jvm
     result
   end
 
-  def self.jar(jar, args = [])
-    cmd = ["java", *options, "-jar", jar, *args].join(" ")
+  def self.run(args = [])
+    cmd = ["java", *options, "-jar", MN2PDF_JAR_PATH, *args].join(" ")
     stdout, stderr, status = Open3.capture3(cmd)
     [stdout, stderr, status]
   end
