@@ -53,6 +53,7 @@ module Jvm
 
   def self.run(args = [])
     cmd = ["java", *options, "-jar", MN2PDF_JAR_PATH, *args].join(" ")
+    puts cmd
     stdout, stderr, status = Open3.capture3(cmd)
     [stdout, stderr, status]
   end
