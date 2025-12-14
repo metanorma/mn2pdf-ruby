@@ -1,4 +1,4 @@
 module Mn2pdf
-  VERSION = "2.34".freeze
+  VERSION = "2.35".freeze
   MN2PDF_JAR_VERSION = VERSION
 end
