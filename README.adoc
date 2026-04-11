@@ -47,4 +47,16 @@ rake bin/mn2pdf.jar
 
 Then release the gem with `rake release`.
 
+== Versioning
+
+The gem version (`VERSION`) can be more granular than the mn2pdf JAR version (`MN2PDF_JAR_VERSION`) because the Ruby wrapper may need API changes that don't require a new JAR.
+
+* When `VERSION == MN2PDF_JAR_VERSION`: a synchronized release, both update together
+* When `VERSION` is a patch release (e.g., 2.50.1) but `MN2PDF_JAR_VERSION` is 2.50: the Ruby API changed but no new JAR is needed
+
+The `release-tag.yml` workflow handles this automatically:
+1. Triggered by the mn2pdf Java repository on new releases via `repository_dispatch`
+2. Validates the JAR exists for the given version
+3. For patch releases (no new JAR), only updates `VERSION`, keeps `MN2PDF_JAR_VERSION` at the base version
+
 
