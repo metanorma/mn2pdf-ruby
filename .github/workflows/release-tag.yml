@@ -24,22 +24,30 @@ jobs:
       - name: Parse mn2pdf version
         env:
           MN2PDF_TAG: ${{ github.event.client_payload.ref }}
-        run: echo MN2PDF_VERSION=${MN2PDF_TAG#*/v} >> ${GITHUB_ENV}
+        run: echo "MN2PDF_VERSION=${MN2PDF_TAG#*/v}" >> ${GITHUB_ENV}
 
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ needs.prepare.outputs.default-ruby-version }}
           bundler-cache: true
 
+      - name: Validate JAR exists for version
+        env:
+          MN2PDF_VERSION: ${{ env.MN2PDF_VERSION }}
+        run: bundle exec rake release:validate_jar[${MN2PDF_VERSION}]
+
       - run: rm -f bin/mn2pdf.jar
 
       - run: bundle exec rake
 
-      - run: |
-          gem install gem-release
-          gem bump --version ${MN2PDF_VERSION} --no-commit
+      - name: Bump version
+        env:
+          MN2PDF_VERSION: ${{ env.MN2PDF_VERSION }}
+        run: bundle exec rake release:bump[${MN2PDF_VERSION}]
 
       - name: Push commit and tag
+        env:
+          MN2PDF_VERSION: ${{ env.MN2PDF_VERSION }}
         run: |
           git add -u lib/mn2pdf/version.rb
           git commit -m "Bump version to ${MN2PDF_VERSION}"
