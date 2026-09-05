@@ -19,6 +19,13 @@ RSpec.describe Jvm do
     expect(Jvm.options).to include("-Djava.awt.headless=true")
   end
 
+  it "raises Java 24+ XML entity size limits" do
+    expect(Jvm.options)
+      .to include("-Djdk.xml.maxGeneralEntitySizeLimit=0")
+    expect(Jvm.options)
+      .to include("-Djdk.xml.totalEntitySizeLimit=0")
+  end
+
   it "minimal stack size" do
     with_env_vars("JAVA_OPTS" => "-Xss5m") do
       expect(Jvm.options).to include("-Xss10m")

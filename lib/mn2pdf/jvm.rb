@@ -7,7 +7,7 @@ module Jvm
     .dirname
     .join("../../bin/mn2pdf.jar")
     .realpath
-  DEFAULT_JAVA_OPTS = %w[-Xss10m -Xmx3g -Djava.awt.headless=true].freeze
+  DEFAULT_JAVA_OPTS = %w[-Xss10m -Xmx3g -Djava.awt.headless=true -Djdk.xml.maxGeneralEntitySizeLimit=0 -Djdk.xml.totalEntitySizeLimit=0].freeze
 
   def self.to_bytes(value)
     case value[-1].downcase
