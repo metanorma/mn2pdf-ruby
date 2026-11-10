@@ -3,6 +3,7 @@ name: release-tag
 on:
   repository_dispatch:
     types: [ metanorma/mn2pdf ]
+  workflow_dispatch:
 
 jobs:
   prepare:
