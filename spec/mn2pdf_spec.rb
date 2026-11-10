@@ -3,6 +3,8 @@ require "tmpdir"
 RSpec.describe Mn2pdf do
   it "gem version more or equal to JAR version" do
     gem_version = Gem::Version.new(Mn2pdf::VERSION)
+    puts gem_version
+    puts Gem::Version.new(Mn2pdf.version)
     expect(gem_version).to be >= Gem::Version.new(Mn2pdf.version)
   end
 
