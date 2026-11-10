@@ -59,6 +59,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
         with:
-          assignees: CAMOBAP
+          assignees: CAMOBAP,Intelligent2013
           update_existing: true
           search_existing: all
+          filename: .github/RELEASE_ISSUE_TEMPLATE.md
