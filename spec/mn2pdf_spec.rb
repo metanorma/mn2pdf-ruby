@@ -3,10 +3,19 @@ require "tmpdir"
 RSpec.describe Mn2pdf do
   it "gem version more or equal to JAR version" do
     gem_version = Gem::Version.new(Mn2pdf::VERSION)
-    puts "gem_version: #{gem_version}"
-    gem_version2 = Gem::Version.new(Mn2pdf.version)
-    puts "gem_version2: #{gem_version2}"
     expect(gem_version).to be >= Gem::Version.new(Mn2pdf.version)
+  end
+
+  it "answers the version token when the JAR interleaves warnings into stdout" do
+    allow(Jvm).to receive(:run).with(%w[-v]).and_return(
+      ["2.74\nThere are warnings and errors:\nCan't write a log file to /x\n", "", nil],
+    )
+    expect(Gem::Version.new(Mn2pdf.version)).to eq(Gem::Version.new("2.74"))
+  end
+
+  it "raises a clear error when the JAR answers no version token" do
+    allow(Jvm).to receive(:run).with(%w[-v]).and_return(["garbage\n", "", nil])
+    expect { Mn2pdf.version }.to raise_error(/no version number/)
   end
 
   it "help not empty" do

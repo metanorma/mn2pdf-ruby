@@ -16,7 +16,13 @@ module Mn2pdf
 
   def self.version
     message, = Jvm.run(%w[-v])
-    message.strip
+    # The JAR can interleave its own warnings into stdout beside the
+    # version line (logback's "Can't write a log file to …" when the log
+    # directory is unwritable, the JVM's option notices, and similar).
+    # Answer the version token itself, never the whole stream — a caller
+    # feeding this to Gem::Version must not see the pollution.
+    message[/\d+(?:\.\d+)*/] or
+      raise "mn2pdf -v returned no version number: #{message.inspect}"
   end
 
   def self.convert(url_path, output_path, xsl_stylesheet, options = {})
